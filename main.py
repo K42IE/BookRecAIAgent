@@ -58,8 +58,22 @@ tools = [
     ),
 ]
 
-# This is the main agent
+# # This is the main agent
 llm = OpenAI(model="gpt-3.5-turbo-0613")
 agent = ReActAgent.from_tools(tools, llm=llm, verbose=True, context=context)
 
-agent.chat_repl()
+
+# UI for demo
+import gradio as gr
+
+def chat_interface(prompt):
+    # Send the prompt to the agent and get the response
+    response = agent.query(prompt)
+    print(response)
+    return response
+
+iface = gr.Interface(fn=chat_interface, 
+                     inputs="text", 
+                     outputs="text")
+
+iface.launch(share=True)
