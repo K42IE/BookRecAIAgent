@@ -27,31 +27,22 @@ import sys
 # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 # logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
+vector_store_books = MilvusVectorStore(dim=384, collection_name="books", overwrite=True)
+
 try:
     storage_context = StorageContext.from_defaults(
-        persist_dir="./storage/books"
+        persist_dir="./storage/books",
+        vector_store=vector_store_books,
     )
     books_index = load_index_from_storage(storage_context)
-    index_loaded = True
-except:
-    index_loaded = False
-
-if not index_loaded:
-    # load data
+except Exception as error:
     book_docs = SimpleDirectoryReader(input_dir="./data").load_data()
-
-    # build index
-    vector_store_books = MilvusVectorStore(dim=384, collection_name="books", overwrite=True)
-    storage_context_books = StorageContext.from_defaults(vector_store=vector_store_books)
-    books_index = VectorStoreIndex.from_documents(book_docs, storage_context=storage_context_books)
-
-    # persist index
+    books_index = VectorStoreIndex.from_documents(book_docs, storage_context=storage_context)
     books_index.storage_context.persist(persist_dir="./storage/books")
 
 books_query_engine = books_index.as_query_engine(similarity_top_k=3)
 
 tools = [
-#    note_engine,
     QueryEngineTool(
         query_engine=books_query_engine,
         metadata=ToolMetadata(
