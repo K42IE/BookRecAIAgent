@@ -27,16 +27,21 @@ import sys
 # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 # logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
-vector_store_books = MilvusVectorStore(dim=384, collection_name="books", overwrite=True)
-
 try:
+    vector_store_books = MilvusVectorStore(dim=384, collection_name="books")
     storage_context = StorageContext.from_defaults(
         persist_dir="./storage/books",
         vector_store=vector_store_books,
     )
     books_index = load_index_from_storage(storage_context)
 except Exception as error:
+    print(f'Unable to load index from storage: {error}')
+    print('Indexing book dataset')
+    vector_store_books = MilvusVectorStore(dim=384, collection_name="books", overwrite=True)
     book_docs = SimpleDirectoryReader(input_dir="./data").load_data()
+    storage_context = StorageContext.from_defaults(
+        vector_store=vector_store_books,
+    )
     books_index = VectorStoreIndex.from_documents(book_docs, storage_context=storage_context)
     books_index.storage_context.persist(persist_dir="./storage/books")
 
