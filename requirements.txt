@@ -3,4 +3,7 @@ pytest
 llama-index
 llama-index-llms-openai
 llama-index-readers-file
-
+llama-index-vector-stores-milvus
+pymilvus 
+llama-index-embeddings-huggingface
+llama-index-embeddings-instructor
