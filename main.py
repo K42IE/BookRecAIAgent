@@ -2,6 +2,7 @@ from dotenv import load_dotenv
 import os
 from prompts import new_prompt, instruction_str, context
 from note_engine import note_engine
+import llama_index
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.core.agent import ReActAgent
 from llama_index.llms.openai import OpenAI
@@ -24,8 +25,8 @@ load_dotenv()
 import logging
 import sys
 
-# logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-# logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+logging.basicConfig(stream=sys.stderr)
+llama_index.core.set_global_handler("simple")
 
 try:
     vector_store_books = MilvusVectorStore(dim=384, collection_name="books")
