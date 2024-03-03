@@ -6,6 +6,13 @@ This is a book recommender agent that helps users discover new books based on th
 
 You'll need [Milvus](https://milvus.io/) for the vector database.
 
+
+## Helpful Links
+https://milvus.io/docs/install_standalone-docker.md
+https://hub.docker.com/
+UI: https://www.gradio.app/
+
+
 ## Notes
 Sample Database: https://www.kaggle.com/datasets/arpansri/books-summary?resource=download
 
