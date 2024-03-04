@@ -1,7 +1,7 @@
+import gradio as gr
 from dotenv import load_dotenv
-import os
-from prompts import new_prompt, instruction_str, context
-from note_engine import note_engine
+from prompts import context
+#from note_engine import note_engine
 import llama_index
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.core.agent import ReActAgent
@@ -64,8 +64,6 @@ agent = ReActAgent.from_tools(tools, llm=llm, verbose=True, context=context)
 
 
 # UI for demo
-import gradio as gr
-
 def chat_interface(prompt):
     # Send the prompt to the agent and get the response
     response = agent.query(prompt)
@@ -74,6 +72,7 @@ def chat_interface(prompt):
 
 iface = gr.Interface(fn=chat_interface, 
                      inputs="text", 
-                     outputs="text")
+                     outputs="text",
+                     allow_flagging="never")
 
 iface.launch(share=True)
